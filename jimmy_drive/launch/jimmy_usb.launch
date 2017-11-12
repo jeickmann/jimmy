@@ -1,0 +1,10 @@
+<launch>
+  <node pkg="rosserial_python" type="serial_node.py" args="/dev/ttyUSB0" name="serial" output="screen">
+    <rosparam param="~Kp_l">0.5</rosparam>
+    <rosparam param="~Ki_l">1.0</rosparam>
+    <rosparam param="~Kd_l">0.0</rosparam>
+    <rosparam param="~Kp_r">0.5</rosparam>
+    <rosparam param="~Ki_r">1.0</rosparam>
+    <rosparam param="~Kd_r">0.0</rosparam>
+  </node>
+</launch>

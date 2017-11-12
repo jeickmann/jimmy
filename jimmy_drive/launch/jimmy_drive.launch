@@ -1,0 +1,16 @@
+<launch>
+  <node pkg="diff_drive" type="diff_drive_twist_to_motors" name="twist_to_motors" output="screen">
+    <rosparam param="base_width">0.11</rosparam>
+    <remap from="twist" to="cmd_vel"/>
+  </node>
+
+  <node pkg="diff_drive" type="diff_drive_tf" name="diff_drive_tf">
+   <rosparam param="base_width">0.11</rosparam>
+   <rosparam param="ticks_meter">1130</rosparam>
+   <remap from="lwheel" to="lticks"/>
+   <remap from="rwheel" to="rticks"/>
+  </node>
+
+  <node pkg="tf2_ros" type="static_transform_publisher" 
+    name="map_odom_zero" args="1 1 0 0 0 0 1 map odom" />
+</launch>
