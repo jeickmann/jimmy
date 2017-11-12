@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="jimmy_drive" type="mock_platform.py" name="mock_plattform"/>
+    
+</launch>

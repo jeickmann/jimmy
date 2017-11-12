@@ -1,5 +1,5 @@
 <launch>
-  <include file="$(find jimmy_drive)/jimmy_drive.launch" />
+  <include file="$(find jimmy_drive)/jimmy_drive.launch" pass_all_args="true" />
 
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
     <rosparam param="controller_frequency">10</rosparam>
