@@ -1,12 +1,12 @@
 <launch>
-  <include file="$(find jimmy_drive)/jimmy_drive.launch" pass_all_args="true" />
+  <include file="$(find jimmy_drive)/launch/jimmy_drive.launch" pass_all_args="true" />
 
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
     <rosparam param="controller_frequency">10</rosparam>
-    <rosparam file="$(find jimmy_drive)/costmap_common_params.yaml" command="load" ns="global_costmap" />
-    <rosparam file="$(find jimmy_drive)/costmap_common_params.yaml" command="load" ns="local_costmap" />
-    <rosparam file="$(find jimmy_drive)/local_costmap_params.yaml" command="load" />
-    <rosparam file="$(find jimmy_drive)/global_costmap_params.yaml" command="load" />
-    <rosparam file="$(find jimmy_drive)/base_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find jimmy_drive)/cfg/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find jimmy_drive)/cfg/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find jimmy_drive)/cfg/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find jimmy_drive)/cfg/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find jimmy_drive)/cfg/base_local_planner_params.yaml" command="load" />
   </node>
 </launch>

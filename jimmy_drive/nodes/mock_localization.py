@@ -40,7 +40,10 @@ class MockLocalization():
 
 
     def poseCallback(self,msg):
-        self.pose = msg.pose.pose
+        self.pose.position.x = msg.pose.pose - self.pose.position.x
+		self.pose.position.y = msg.pose.pose - self.pose.position.y
+		self.pose.position.z = msg.pose.pose - self.pose.position.z
+		
 
 if __name__ == '__main__':
     mockLocalization = MockLocalization()
