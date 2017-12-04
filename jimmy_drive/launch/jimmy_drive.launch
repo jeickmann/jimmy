@@ -5,6 +5,8 @@
     <remap from="twist" to="cmd_vel"/>
   </node>
 -->
+  
+
   <node pkg="jimmy_drive" type="odom_pub.py" name="odom_pub">
    <rosparam param="base_width">0.11</rosparam>
    <rosparam param="ticks_meter">1130</rosparam>
@@ -13,11 +15,13 @@
   <node pkg="jimmy_drive" type="diff_drive.py" name="diff_drive">
     <rosparam param="base_width">0.11</rosparam>
   </node>
+  <!--  <node pkg="jimmy_drive" type="mock_localization.py" name="mock_localization"/> -->
   
-  <node pkg="jimmy_drive" type="mock_localization.py" name="mock_localization"/>
+
+  <!--<node pkg="jimmy_drive" type="ar_localizer.py" name="ar_localization"/>-->
 
   <!--
-  node pkg="tf2_ros" type="static_transform_publisher" 
+  <node pkg="tf2_ros" type="static_transform_publisher" 
     name="map_odom_zero" args="1 1 0 0 0 0 1 map odom" />
-    -->
+   -->
 </launch>

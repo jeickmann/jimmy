@@ -1,0 +1,15 @@
+<launch>
+
+  <param name="use_gui" value="true"/>
+  
+  <!--
+  	<param name="robot_description" textfile="$(find hexapod_description)/urdf/hexapod.urdf" />
+  -->
+  <param name="robot_description" command="$(find xacro)/xacro '$(find james_description)/urdf/jimmy.urdf.xacro'"/>
+  
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+  <node name="static_transform_publisher" type="static_transform_publisher" pkg="tf2_ros" args="0 0 0 0 0 0 odom base_link"/>
+  <node name="rviz" pkg="rviz" type="rviz" required="true" />
+
+</launch>

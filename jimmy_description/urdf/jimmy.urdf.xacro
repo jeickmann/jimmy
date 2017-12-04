@@ -1,0 +1,240 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="jimmy">
+
+	<gazebo>
+	  <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+	    <robotNamespace>/james</robotNamespace>
+      	<robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+	  </plugin>
+	</gazebo>
+  
+
+	<xacro:property name="box_length" value=".14" />
+	<xacro:property name="box_width" value=".14" />
+	<xacro:property name="box_height" value=".1" />
+	
+	<xacro:property name="wheel_diam" value=".06" />
+	<xacro:property name="wheel_width" value=".005" />
+	
+	<xacro:property name="wheel_axis_offset" value=".05" />
+	
+	<xacro:property name="tail_wheel_diam" value="0.01"/>
+	<xacro:property name="tail_wheel_width" value=".003" />
+	
+	<xacro:property name="tail_wheel_offset" value="-0.03" />
+	
+	<material name="grey">
+		<color rgba="0.6 0.6 0.6 1" />
+	</material>
+	
+	<material name="yellow">
+		<color rgba="0.8 0.8 0 1" />
+	</material>
+	
+	<material name="black">
+		<color rgba="0 0 0 1" />
+	</material>
+	
+	<link name="base_link">
+		<collision>
+			<geometry>
+				<box size="${box_length} ${box_width} ${box_height}" />
+			</geometry>
+		</collision>
+		<visual>
+			<geometry>
+				<box size="${box_length} ${box_width} ${box_height}" />
+			</geometry>
+			<material name="grey"/>
+		</visual>
+		<xacro:cube_inertial origin_xyz="0 0 0" mass="5" width="${box_width}" height="${box_height}" depth="${box_length}"/>
+	</link>
+	
+	<gazebo reference="base_link">
+	  	<material>Gazebo/Grey</material>
+	</gazebo>
+	
+	<link name="wheel_l">
+		<collision>
+			<geometry>
+				<cylinder radius="${wheel_diam/2}" length="${wheel_width}"/>
+			</geometry>
+			<origin xyz="0 ${wheel_width/2} 0" rpy="1.57 0 0"/>
+		</collision>
+		<visual>
+			<geometry>
+				<cylinder radius="${wheel_diam/2}" length="${wheel_width}"/>
+			</geometry>
+			<material name="yellow"/>
+			<origin xyz="0 ${wheel_width/2} 0" rpy="1.57 0 0"/>
+		</visual>
+		<xacro:cube_inertial origin_xyz="0 0 0" mass="0.5" width="${wheel_width}" height="${wheel_diam}" depth="${wheel_diam}"/>
+	</link>
+	
+	<gazebo reference="wheel_l">
+	  	<material>Gazebo/Yellow</material>
+	  	<mu1>100</mu1>
+	  	<mu2>100</mu2>
+	</gazebo>
+	
+	<joint name="base_to_wheel_l" type="continuous">
+		<axis xyz="0 1 0" />
+		<parent link="base_link" />
+		<child link="wheel_l" />
+		<origin xyz="${wheel_axis_offset} ${box_width/2} ${-box_height/2}" />
+	</joint>
+	
+	<transmission name="trans_l">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="base_to_wheel_l">
+        <hardwareInterface>VelocityJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="motor_l">
+        <mechanicalReduction>1</mechanicalReduction>
+        <hardwareInterface>VelocityJointInterface</hardwareInterface>
+      </actuator>
+  	</transmission>
+	
+	<link name="wheel_r">
+		<visual>
+			<geometry>
+				<cylinder radius="${wheel_diam/2}" length="${wheel_width}"/>
+			</geometry>
+			<material name="yellow"/>
+			<origin xyz="0 ${-wheel_width/2} 0" rpy="1.57 0 0"/>
+		</visual>
+		<collision>
+			<geometry>
+				<cylinder radius="${wheel_diam/2}" length="${wheel_width}"/>
+			</geometry>
+			<origin xyz="0 ${-wheel_width/2} 0" rpy="1.57 0 0"/>
+		</collision>
+		<xacro:cube_inertial origin_xyz="0 0 0" mass="0.5" width="${wheel_width}" height="${wheel_diam}" depth="${wheel_diam}"/>
+	</link>
+	
+	
+	<gazebo reference="wheel_r">
+	  	<material>Gazebo/Yellow</material>
+	  	<mu1>100</mu1>
+	  	<mu2>100</mu2>
+	</gazebo>
+	
+	<joint name="base_to_wheel_r" type="continuous">
+		<axis xyz="0 1 0" />
+		<parent link="base_link" />
+		<child link="wheel_r" />
+		<origin xyz="${wheel_axis_offset} ${-box_width/2} ${-box_height/2}" />
+	</joint>
+	
+	<transmission name="trans_r">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="base_to_wheel_r">
+        <hardwareInterface>VelocityJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="motor_r">
+        <mechanicalReduction>1</mechanicalReduction>
+        <hardwareInterface>VelocityJointInterface</hardwareInterface>
+      </actuator>
+  	</transmission>
+	
+	<link name="tail_wheel_shaft">
+		<visual>
+			<geometry>
+				<cylinder radius="0.02" length="${(wheel_diam-tail_wheel_diam)/2}"/>
+			</geometry>
+			<material name="black"/>
+			<origin xyz="0 0 ${(wheel_diam-tail_wheel_diam)/4}" />
+		</visual>
+		<xacro:cube_inertial origin_xyz="0 0 0" mass="0.1" width="0.04" height="${(wheel_diam-tail_wheel_diam)/4}" depth="0.04"/>
+	</link>
+	
+	<gazebo reference="tail_wheel_shaft">
+	  	<material>Gazebo/Black</material>
+	</gazebo>
+	
+	<link name="tail_wheel">
+		<visual>
+			<geometry>
+				<cylinder radius="${tail_wheel_diam/2}" length="${tail_wheel_width}"/>
+			</geometry>
+			<material name="black"/>
+			<origin xyz="0 0 0" rpy="1.57 0 0"/>
+		</visual>
+		<collision>
+			<geometry>
+				<cylinder radius="${tail_wheel_diam/2}" length="${tail_wheel_width}"/>
+			</geometry>
+			<origin xyz="0 0 0" rpy="1.57 0 0"/>
+		</collision>
+		<xacro:cube_inertial origin_xyz="0 0 0" mass="0.2" width="${tail_wheel_width}" height="${tail_wheel_diam}" depth="${tail_wheel_diam}"/>
+	</link>
+	
+	<gazebo reference="tail_wheel">
+	  	<material>Gazebo/Black</material>
+	</gazebo>
+	
+	<joint name="base_to_tail_wheel_shaft" type="continuous">
+		<axis xyz="0 0 1" />
+		<parent link="base_link" />
+		<child link="tail_wheel_shaft" />
+		<origin xyz="${tail_wheel_offset} 0 ${-box_height/2-(wheel_diam-tail_wheel_diam)/2}" />
+	</joint>
+	
+	<joint name="tail_shaft_to_wheel" type="continuous">
+		<axis xyz="0 1 0" />
+		<parent link="tail_wheel_shaft" />
+		<child link="tail_wheel" />
+		<origin xyz="${-tail_wheel_diam/2} 0 0" />
+	</joint>
+	
+	<link name="raspicam">
+		<visual>
+			<geometry>
+				<box size="0.04 0.01 0.03" />
+			</geometry>
+			<material name="black"/>
+			<origin xyz="0 0 -0.015"/>
+		</visual>
+		<xacro:cube_inertial origin_xyz="0 0 0" mass="0.01" width="0.01" height="0.03" depth="0.04"/>
+	</link>
+	
+	<joint name="base_to_camera" type="fixed">
+		<parent link="base_link" />
+		<child link="raspicam" />
+		<origin xyz="0.06 0.05 ${box_height}" />
+	</joint>
+
+	
+ 
+	<xacro:macro name="cube_inertial" params="origin_xyz mass width height depth">
+		<inertial>
+			<origin xyz="${origin_xyz}"/>
+			<mass value="${mass}" />
+			<inertia	ixx="${mass/12*(height*height+depth*depth)}" 	ixy="0.0" 	ixz="0.0" 
+									iyy="${mass/12*(width*width+depth*depth)}" 	iyz="0.0"
+												izz="${mass/12*(width*width+height*height)}" />
+		</inertial>
+	</xacro:macro>
+<!-- 
+	<gazebo>
+	  <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+	    <alwaysOn>true</alwaysOn>
+	    <updateRate>10</updateRate>
+	    <leftJoint>base_to_wheel_l</leftJoint>
+	    <rightJoint>base_to_wheel_r</rightJoint>
+	    <wheelSeparation>${box_width+wheel_width}</wheelSeparation>
+	    <wheelDiameter>${wheel_diam}</wheelDiameter>
+	    <torque>20</torque>
+	    <commandTopic>cmd_vel</commandTopic>
+	    <odometryTopic>odom</odometryTopic>
+	    <odometryFrame>odom</odometryFrame>
+	    <robotBaseFrame>base_link</robotBaseFrame>
+	  </plugin>
+	</gazebo>	
+ -->
+	<gazebo>
+	  <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      	<robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+	  </plugin>
+	</gazebo>
+</robot>

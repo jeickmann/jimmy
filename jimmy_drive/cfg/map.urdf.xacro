@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="eg_map">
+	<link name="map">
+	</link>
+	
+	<link name="tagposition_0">
+	</link>
+	
+	<joint name="map_to_0" type="fixed">
+		<parent link="map" />
+		<child link="tagposition_0" />
+		<origin xyz="2 4 2.5" rpy="3.1416 0 0" />
+	</joint>
+</robot>
