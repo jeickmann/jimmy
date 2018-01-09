@@ -1,8 +1,8 @@
 <launch>
   <arg name="port" default="/dev/ttyUSB0" />
   <node pkg="rosserial_python" type="serial_node.py" args="$(arg port)" name="serial">
-    <rosparam param="Kp_l">4.0</rosparam>
-    <rosparam param="Ki_l">32.0</rosparam>
+    <rosparam param="Kp_l">0.3</rosparam>
+    <rosparam param="Ki_l">0.0</rosparam>
     <rosparam param="Kd_l">0.0</rosparam>
     <rosparam param="Kp_r">4.0</rosparam>
     <rosparam param="Ki_r">32.0</rosparam>
