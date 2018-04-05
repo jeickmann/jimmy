@@ -1,19 +1,26 @@
 <launch>
+  <include file="$(find jimmy_description)/launch/state.launch" />
+  <include file="$(find jimmy_drive)/launch/jimmy_usb.launch" pass_all_args="true" />
+  <!--
+  <include file="$(find jimmy_drive)/launch/rplidar.launch" pass_all_args="true" />
+  
+  <include file="$(find jimmy_drive)/launch/jimmy_apriltags.launch" pass_all_args="true" />
+  -->
 <!--  
   <node pkg="diff_drive" type="diff_drive_twist_to_motors" name="twist_to_motors" output="screen">
     
     <remap from="twist" to="cmd_vel"/>
-  </node>
+  </node>228/round0
 -->
   
 
   <node pkg="jimmy_drive" type="odom_pub.py" name="odom_pub">
-   <rosparam param="base_width">0.11</rosparam>
-   <rosparam param="ticks_meter">1130</rosparam>
+   <rosparam param="base_width">0.107</rosparam>
+   <rosparam param="ticks_meter">1180</rosparam>
   </node>
 
   <node pkg="jimmy_drive" type="diff_drive.py" name="diff_drive">
-    <rosparam param="base_width">0.11</rosparam>
+    <rosparam param="base_width">0.107</rosparam>
   </node>
   <!--  <node pkg="jimmy_drive" type="mock_localization.py" name="mock_localization"/> -->
   

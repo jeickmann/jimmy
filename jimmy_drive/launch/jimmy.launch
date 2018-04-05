@@ -1,0 +1,10 @@
+<launch>
+
+  <include file="$(find jimmy_drive)/launch/jimmy_teleop.launch" />
+  <include file="$(find jimmy_drive)/launch/jimmy_slam.launch" />
+  <include file="$(find jimmy_drive)/launch/jimmy_nav.launch" />
+  <include file="$(find jimmy_drive)/launch/jimmy_webremote.launch" />
+  
+  
+
+</launch>

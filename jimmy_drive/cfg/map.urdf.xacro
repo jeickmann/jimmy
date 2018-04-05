@@ -2,13 +2,19 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="eg_map">
 	<link name="map">
 	</link>
+
+	<xacro:macro name="tag" params="num xyz rpy">
+		<link name="tagposition_${num}">
+		</link>
+		
+		<joint name="map_to_${num}" type="fixed">
+			<parent link="map" />
+			<child link="tagposition_${num}" />
+			<origin xyz="${xyz}" rpy="${rpy}" />
+		</joint>
+	</xacro:macro>
 	
-	<link name="tagposition_0">
-	</link>
+	<xacro:tag num="0" xyz="6.7 2.8 2.5" rpy="3.1416 0 -1.57"/>
 	
-	<joint name="map_to_0" type="fixed">
-		<parent link="map" />
-		<child link="tagposition_0" />
-		<origin xyz="2 4 2.5" rpy="3.1416 0 0" />
-	</joint>
+	<xacro:tag num="1" xyz="6.7 3.8 2.5" rpy="3.1416 0 1.57"/>
 </robot>

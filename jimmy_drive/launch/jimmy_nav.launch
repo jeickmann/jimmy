@@ -1,27 +1,43 @@
 <launch>
-  <include file="$(find jimmy_drive)/launch/jimmy_usb.launch" pass_all_args="true" />
-  <include file="$(find jimmy_drive)/launch/jimmy_apriltags.launch" pass_all_args="true" />
-  <include file="$(find jimmy_drive)/launch/jimmy_drive.launch" pass_all_args="true" />
 
-
+<!--
   <param name="map_description" command="$(find xacro)/xacro '$(find jimmy_drive)/cfg/map.urdf.xacro'"/>
-  
   <node name="maptag_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
 	  <remap from="robot_description" to="map_description"/>
-	  <param name="use_tf_static" value="false"/>
   </node>
 
-  <node pkg="jimmy_drive" type="ar_localizer.py" name="localizer" output="screen">
-    <param name="initial_x" value="1"/>
-    <param name="initial_y" value="1"/>
+  <node pkg="jimmy_drive" type="ar_localizer.py" name="localizer">
+    <param name="initial_x" value="6.6"/>
+    <param name="initial_y" value="3"/>
   </node>
+-->
+<!--
+  <node pkg="robot_localization" type="ekf_localization_node" name="global_fusion">
+    <param name="two_d_mode" value="true"/>
+    <param name="map_frame" value="map"/>
+    <param name="odom_frame" value="odom"/>
+    <param name="base_link_frame" value="base_link"/>
+    <param name="world_frame" value="map"/>
+    <param name="odom0" value="/odom"/>
+    <param name="pose0" value="/ar_pose"/>
+    <rosparam param="odom0_config">[true,  true,  false,
+                                false, false, true,
+                                true,  false, false,
+                                false, false, true,
+                                false, false, false]</rosparam>
+    <rosparam param="pose0_config">[true,  true,  false,
+                                false, false, true,
+                                false,  false, false,
+                                false, false, false,
+                                false, false, false]</rosparam>
+  </node>
+-->
 
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
-    <rosparam param="controller_frequency">10</rosparam>
-    <rosparam file="$(find jimmy_drive)/cfg/costmap_common_params.yaml" command="load" ns="global_costmap" />
-    <rosparam file="$(find jimmy_drive)/cfg/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam param="controller_frequency">5</rosparam>
     <rosparam file="$(find jimmy_drive)/cfg/local_costmap_params.yaml" command="load" />
     <rosparam file="$(find jimmy_drive)/cfg/global_costmap_params.yaml" command="load" />
     <rosparam file="$(find jimmy_drive)/cfg/base_local_planner_params.yaml" command="load" />
   </node>
+
 </launch>

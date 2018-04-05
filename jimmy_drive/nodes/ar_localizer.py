@@ -19,18 +19,21 @@ from tf import transformations
 def tag_callback(detections):
     for detection in detections.detections:
         id = detection.id
-        rospy.loginfo("Found marker " + str(id))
+        #rospy.loginfo("Found marker " + str(id))
         
         found_frame_id = "tag_" + str(id)
         position_frame_id = "tagposition_" + str(id)
         map_to_marker = tfBuffer.lookup_transform("map", position_frame_id, rospy.Time(0))
         odom_to_marker = tfBuffer.lookup_transform("odom", found_frame_id, rospy.Time(0))
         marker_to_odom = tfBuffer.lookup_transform(found_frame_id, "odom", rospy.Time(0))
-        euler = tf.transformations.euler_from_quaternion([marker_to_odom.transform.rotation.x, marker_to_odom.transform.rotation.y, marker_to_odom.transform.rotation.z, marker_to_odom.transform.rotation.w])
-        rospy.loginfo("Translation: " + str(euler))
+        marker_to_base = tfBuffer.lookup_transform(found_frame_id, "base_link", rospy.Time(0))
+        
         map2mark_kdl = tf2_kdl.tf2_kdl.transform_to_kdl(map_to_marker)
         mark2odom_kdl = tf2_kdl.tf2_kdl.transform_to_kdl(marker_to_odom)
+        mark2base_kdl= tf2_kdl.tf2_kdl.transform_to_kdl(marker_to_base)
         map2odom_kdl = map2mark_kdl * mark2odom_kdl
+        map2base_kdl = map2mark_kdl * mark2base_kdl
+        
         global dataT
         global dataR
         global indexT
@@ -49,8 +52,8 @@ def tag_callback(detections):
     pass
 
 def init():
+    #pub = rospy.Publisher('ar_pose', geometry_msgs, queue_size=10)
     rospy.init_node('ar_localization', anonymous=True)
-    rospy.Subscriber("tag_detections", AprilTagDetectionArray, tag_callback)
     global tfBuffer
     global t
     global dataT
@@ -60,9 +63,8 @@ def init():
     global maxT
     global maxR
 
-
-    maxT = 5
-    maxR = 5
+    maxT = 1
+    maxR = 1
 
     initialT = [rospy.get_param("~initial_x", 0), rospy.get_param("~initial_y", 0), 0]
     dataT = []
@@ -98,8 +100,8 @@ def init():
     except:
         rospy.logwarn("Unable to find odom to base_link, no odometry transforms published?")
 
-
-
+    rospy.Subscriber("tag_detections", AprilTagDetectionArray, tag_callback)
+    
     rate = rospy.Rate(10) # 10hz
     while not rospy.is_shutdown():
         t.header.stamp = rospy.Time.now()
@@ -119,8 +121,8 @@ def init():
 
         rAvg = [0,0,0]
         for i in dataR:
-            rAvg[0] = rAvg[0] + i[0]
-            rAvg[1] = rAvg[1] + i[1]
+            #rAvg[0] = rAvg[0] + i[0]
+            #rAvg[1] = rAvg[1] + i[1]
             rAvg[2] = rAvg[2] + i[2]
         
         rAvg[0] = rAvg[0]/len(dataR)
